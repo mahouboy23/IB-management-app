@@ -5,6 +5,8 @@ import Login from './components/Login';
 import TeacherDashboard from './components/TeacherDashboard';
 import StudentDashboard from './components/StudentDashboard';
 import CoordinatorDashboard from './components/CoordinatorDashboard';
+import Classes from './components/Classes';
+import Grades from './components/Grades';
 
 
 const App = () => {
@@ -37,13 +39,20 @@ const App = () => {
                     user ? (
                         <>
                             <div>Welcome, {user.role}</div>
-                            {user.role === 'teacher' && <TeacherDashboard />}
+                            {user.role === 'teacher' && <TeacherDashboard onLogout={handleLogout} />}
                             {user.role === 'student' && <StudentDashboard />}
                             {user.role === 'coordinator' && <CoordinatorDashboard />}
                             <button onClick={handleLogout}>Logout</button>
                         </>
                     ) : <Navigate replace to="/login" />
                 } />
+                   {/* Other routes */}
+                     <Route path="/teacher" element={<TeacherDashboard />}>
+                     <Route path="classes" element={<Classes />} />
+                     <Route path="grades" element={<Grades />} />
+                   {/* Define other nested routes */}
+                   </Route>
+                   {/* Other routes */}
             </Routes>
         </Router>
     );

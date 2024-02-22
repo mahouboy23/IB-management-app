@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import './TeacherDashboard.css'; // Ensure you have a corresponding CSS file
+import './TeacherDashboard.css'; 
 
 function TeacherDashboard({ onLogout }) {
-  // Placeholder for account name, replace with actual state/logic as needed
   const accountName = "Teacher's Name";
   return (
     <div className="dashboard-container">
@@ -36,14 +35,13 @@ function TeacherDashboard({ onLogout }) {
         </nav>
 
         <div className="disconnect">
-                {/* Use the onLogout prop when the button is clicked */}
                 <button onClick={onLogout}>DISCONNECT</button>
         </div>
       </aside>
 
       <main className="main-content">
         <h1>Welcome to the Teacher Dashboard</h1>
-        <Outlet /> {/* Nested routes will render here */}
+        <Outlet /> 
       </main>
     </div>
   );

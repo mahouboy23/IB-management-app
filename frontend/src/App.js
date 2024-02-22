@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'; // Updated to named import
+import { jwtDecode } from 'jwt-decode'; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import TeacherDashboard from './components/TeacherDashboard';
@@ -38,7 +38,6 @@ const App = () => {
                 <Route path="/" element={
                     user ? (
                         <>
-                            <div>Welcome, {user.role}</div>
                             {user.role === 'teacher' && <TeacherDashboard onLogout={handleLogout} />}
                             {user.role === 'student' && <StudentDashboard />}
                             {user.role === 'coordinator' && <CoordinatorDashboard />}

@@ -18,6 +18,16 @@ table {
   }
   
   button {
-    /* Style your button */
+    color: white;
+    background-color: #e74c3c; /* A red color to signify a delete action */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #c0392b; /* Darken the button a bit when hovered */
   }
   

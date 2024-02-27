@@ -1,47 +1,53 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import './TeacherDashboard.css'; 
+import { NavLink, Outlet } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faBook, faChalkboardTeacher, faShapes, faClipboardList, faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
+import './TeacherDashboard.css';
 
 function TeacherDashboard({ onLogout }) {
   const accountName = "Teacher's Name";
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
-        <div className="logo-section">
-          <h2>LOGO</h2>
+      <div className="logo-section">
+          <h2>IB management</h2>
         </div>
-        <div className="account-name">
-          <p>{accountName}</p>
-        </div>
-
         <nav className="menu-section">
-          <div className="menu-item">
-            <p>Class Management</p>
-            <div className="dropdown">
-              <Link to="/teacher/classes">Classes</Link>
-              <Link to="/teacher/grades">Grades</Link>
-              <Link to="/teacher/boundaries">Boundaries</Link>
-              <Link to="/teacher/other-menu">Other Menu</Link>
-            </div>
-          </div>
-
-          <div className="menu-item">
-            <p>Settings</p>
-            <div className="dropdown">
-              <Link to="/teacher/reset-password">Reset Password</Link>
-              <Link to="/teacher/other-setting">Other Setting</Link>
-            </div>
-          </div>
+          <NavLink exact to="/teacher/overview" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faHome} /> Overview
+          </NavLink>
+          <NavLink to="/teacher/classes" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faBook} /> Classes
+          </NavLink>
+          <NavLink to="/teacher/grades" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faChalkboardTeacher} /> Grades
+          </NavLink>
+          <NavLink to="/teacher/boundaries" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faShapes} /> Boundaries
+          </NavLink>
+          <NavLink to="/teacher/report-card" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faClipboardList} /> Report card
+          </NavLink>
+          <NavLink to="/teacher/settings" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faCog} /> Settings
+          </NavLink>
         </nav>
-
-        <div className="disconnect">
-                <button onClick={onLogout}>DISCONNECT</button>
+        <div className="logout-section">
+          <button onClick={onLogout}>Log out</button>
         </div>
       </aside>
-
       <main className="main-content">
-        <h1>Welcome to the Teacher Dashboard</h1>
-        <Outlet /> 
+       <div className="grades-header">
+          <div className="header-search-container">
+            <input type="text" placeholder="Search" className="search-input" />
+            <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button> 
+          </div>
+          <div className="user-profile">
+            <span className="username">{accountName}</span> {/* Dynamic username */}
+            <img src="/path-to-user-image.jpg" alt="User" className="user-image" />
+          </div>
+        </div>
+        <Outlet />
       </main>
     </div>
   );

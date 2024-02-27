@@ -1,71 +1,143 @@
+/* TeacherDashboard.css */
 .dashboard-container {
-    display: flex;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #f0f0f0;
-    height: 100vh;
-    padding: 20px;
-    color: #333;
-  }
-  
-  .logo-section {
-    text-align: center;
-    margin-bottom: 20px;
-    color: orange; /* Your color theme */
-  }
-  
-  .account-name {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
-    color: blue; /* Your color theme */
-  }
-  
-  .menu-section {
-    margin-bottom: 20px;
-  }
-  
-  .menu-item {
-    cursor: pointer;
-    margin-bottom: 10px;
-    color: green; /* Your color theme */
-  }
-  
-  .menu-item p {
-    margin: 0;
-  }
-  
-  .dropdown {
-    background-color: #e6e6e6;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .dropdown a {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .disconnect button {
-    width: 100%;
-    padding: 10px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .disconnect button:hover {
-    background-color: darkred;
-  }
-  
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
+  display: flex;
+  height: 100vh;
+  background-color: #f4f4f4; /* Color for the main content area */
+}
+
+/* Ensures no whitespace on the left */
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.main-content-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.grades-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  background-color: #fff;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.header-search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.search-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+.user-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #363740; /* Dark background color */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo-section h2 {
+  color: #ffffff; /* White color for the logo text */
+  margin-bottom: -100px; /* Space below the logo */
+}
+
+.menu-item {
+  color: #a4a6b3; /* Gray color for menu item text */
+  margin-bottom: 13px;
+  padding: 10px 20px; /* Increased left padding for alignment */
+  font-size: 18px; /* Size of the text */
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.menu-item:hover, .menu-item.active {
+  background-color: #5c5f70; /* Lighter background for hover and active state */
+  color: #ffffff; /* White text for readability */
+}
+
+.menu-item svg {
+  margin-right: 10px; /* Space between icon and text */
+  color: inherit; /* Icon color will be the same as the text color */
+}
+
+/* Logout Button Styles */
+.logout-section button {
+  width: 100%;
+  padding: 10px;
+  background-color: #f44336;
+  color: #ffffff;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-section button:hover {
+  background-color: #d32f2f;
+}
+
+/* Header Styles */
+.header {
+  width: calc(100% - 250px); /* Full width minus sidebar width */
+  background-color: #363740; /* Dark background color */
+  color: #ffffff; /* White text color */
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .user-info {
+  display: flex;
+  align-items: center;
+}
+
+.header .user-info img {
+  border-radius: 50%; /* Circular profile image */
+  margin-right: 10px;
+}
+
+/* Main Content Styles */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}

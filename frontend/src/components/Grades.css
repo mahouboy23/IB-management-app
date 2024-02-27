@@ -1,0 +1,23 @@
+/* Grades.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Add more styling */
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    /* Add more styling */
+  }
+  
+  th {
+    background-color: #f4f4f4;
+    /* Add more styling */
+  }
+  
+  button {
+    /* Style your button */
+  }
+  

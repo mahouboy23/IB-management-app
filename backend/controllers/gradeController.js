@@ -14,10 +14,24 @@ exports.addGrade = async (req, res) => {
 };
 
 exports.getGradesByStudent = async (req, res) => {
-    const { studentId } = req.params; 
+    const { studentId } = req.params;
     try {
-        const [grades] = await db.execute(
-            `SELECT * FROM Grades WHERE student_id = ?`,
+        const [grades] = await db.execute(`
+            SELECT 
+                g.grade_id,
+                u.full_name AS student_name, 
+                c.class_name,
+                c.subject,
+                g.grade_value,
+                g.trimester
+            FROM 
+                Grades g
+            JOIN 
+                Users u ON g.student_id = u.user_id
+            JOIN 
+                Classes c ON g.class_id = c.class_id
+            WHERE 
+                g.student_id = ?`, 
             [studentId]
         );
         res.status(200).json({ message: "Grades fetched successfully", grades });
@@ -25,6 +39,8 @@ exports.getGradesByStudent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
 
 exports.updateGrade = async (req, res) => {
     const { gradeId } = req.params; 

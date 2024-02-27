@@ -1,29 +1,41 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTable } from 'react-table';
+import axios from 'axios';
 import './Grades.css'; // Make sure you have the corresponding CSS file
 
 function Grades() {
-  const data = useMemo(
-    () => [
-      { id: 1, name: "Breal Ciceron", moyenneClass: "4/7", grade: "6/7", date: "20 Jan, 2022", level: "HL" },
-      { id: 2, name: "Breal Ciceron", moyenneClass: "4/7", grade: "5/7", date: "22 Feb, 2022", level: "HL" },
-    ],
-    []
-  );
+  const [gradesData, setGradesData] = useState([]);
+
+  useEffect(() => {
+    // Function to fetch grades
+    const fetchGrades = async () => {
+      try {
+        const response = await axios.get('/api/grades/3'); // Replace with the actual student ID or parameterize as needed
+        setGradesData(response.data.grades); // Assuming the response has a .grades property with the grades array
+      } catch (error) {
+        console.error('Error fetching grades:', error);
+        // Handle error here, such as setting an error state to display an error message
+      }
+    };
+
+    fetchGrades();
+  }, []);
+
+  const data = useMemo(() => gradesData, [gradesData]);
 
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
-        accessor: 'name', // accessor is the "key" in the data
+        accessor: 'student_name', // accessor is the "key" in the data
       },
       {
         Header: 'Moyenne Class',
-        accessor: 'moyenneClass',
+        accessor: 'class_name',
       },
       {
         Header: 'Grade',
-        accessor: 'grade',
+        accessor: 'grade_value',
       },
       {
         Header: 'Date',

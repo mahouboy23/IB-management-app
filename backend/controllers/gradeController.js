@@ -20,6 +20,7 @@ exports.getGradesByStudent = async (req, res) => {
             SELECT 
                 g.grade_id,
                 u.full_name AS student_name, 
+                u.level,
                 c.class_name,
                 c.subject,
                 g.grade_value,

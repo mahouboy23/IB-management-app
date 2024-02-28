@@ -67,6 +67,7 @@ function Grades() {
   return (
     <div>
       <h2>Grade Management</h2>
+
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -99,7 +100,13 @@ function Grades() {
 // Replace with the actual delete logic
 function handleDelete(gradeId) {
   console.log('Deleting grade with id:', gradeId);
-  // Here you would handle the deletion logic, such as making an API call to delete the grade
+  
+const postIdToDelete = 4;
+axios.delete(`/api/grades/${postIdToDelete}`)
+  .catch(error => {
+    console.error(error);
+  });
+  window.location.reload(false)
 }
 
 export default Grades;

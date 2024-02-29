@@ -9,4 +9,6 @@ router.post('/login', [
     body('password').not().isEmpty()
 ], authController.login);
 
+router.get('/students', authController.getAllStudents);
+
 module.exports = router;

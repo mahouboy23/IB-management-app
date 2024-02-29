@@ -132,7 +132,6 @@ body, html {
 }
 
 .header .user-info img {
-  border-radius: 50%; /* Circular profile image */
   margin-right: 10px;
 }
 

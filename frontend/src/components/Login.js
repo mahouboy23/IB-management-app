@@ -15,8 +15,9 @@ const Login = ({ onLogin }) => {
     });
 
     if (response.ok) {
-      const { token } = await response.json();
-      onLogin(token); // Call the login handler passed from App component
+      const { token, fullName } = await response.json();
+      localStorage.setItem('fullName', fullName); // Store the full name in local storage
+      onLogin(token, fullName); // Pass the full name to the login handler
     } else {
       const { message } = await response.json();
       setErrorMessage(message || 'Login failed');

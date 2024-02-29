@@ -24,11 +24,25 @@ exports.login = async (req, res) => {
                 }                  
                 const token = jwt.sign({ userId: user[0].user_id, role: user[0].role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-                return res.json({ message: "Login successful", token });
+                return res.json({ message: "Login successful", token, fullName: user[0].full_name });
             }
         }
 
         res.status(401).json({ message: "Authentication failed" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllStudents = async (req, res) => {
+    try {
+        const [students] = await db.execute('SELECT * FROM Users WHERE role = "student"');
+
+        if (students.length > 0) {
+            return res.status(200).json({ message: "Students fetched successfully", students });
+        } else {
+            return res.status(404).json({ message: "No students found" });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

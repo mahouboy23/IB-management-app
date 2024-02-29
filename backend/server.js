@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const gradeRoutes = require('./routes/gradeRoutes');
 const authRoutes = require('./routes/authRoutes');
+const classRoutes = require('./routes/classRoutes'); 
 require('dotenv').config();
 
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -16,3 +17,4 @@ app.use('/api', gradeRoutes);
 
 app.use('/api', authRoutes);
 
+app.use('/api', classRoutes);

@@ -5,7 +5,7 @@ import { faHome, faBook, faChalkboardTeacher, faShapes, faClipboardList, faCog, 
 import './TeacherDashboard.css';
 
 function TeacherDashboard({ onLogout }) {
-  const accountName = "Teacher's Name";
+  const username = localStorage.getItem('fullName');
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -43,8 +43,8 @@ function TeacherDashboard({ onLogout }) {
             <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button> 
           </div>
           <div className="user-profile">
-            <span className="username">{accountName}</span> {/* Dynamic username */}
-            <img src="/path-to-user-image.jpg" alt="User" className="user-image" />
+            <span className="username">{username}</span> {/* Dynamic username */}
+            <img src="/MHA_IB_M_logo.png" alt="User" className="user-image" />
           </div>
         </div>
         <Outlet />
@@ -52,5 +52,7 @@ function TeacherDashboard({ onLogout }) {
     </div>
   );
 }
+
+
 
 export default TeacherDashboard;

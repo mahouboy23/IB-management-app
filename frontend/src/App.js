@@ -7,7 +7,11 @@ import StudentDashboard from './components/StudentDashboard';
 import CoordinatorDashboard from './components/CoordinatorDashboard';
 import Classes from './components/Classes';
 import Grades from './components/Grades';
-
+import Boundaries from './components/Boundaries';
+import SClasses from './components/Classes-s';
+import SGrades from './components/Grades-s';
+import COverview from './components/Overview-c'
+import CClasses from './components/Classes-c';
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -27,10 +31,11 @@ const App = () => {
     };
 
     const handleLogout = () => {
+        console.log('Logging out...');
         localStorage.removeItem('token');
         localStorage.removeItem('fullName');
         setUser(null);
-    };
+    };         
 
     return (
         <Router>
@@ -40,19 +45,27 @@ const App = () => {
                     user ? (
                         <>
                             {user.role === 'teacher' && <TeacherDashboard onLogout={handleLogout} />}
-                            {user.role === 'student' && <StudentDashboard />}
-                            {user.role === 'coordinator' && <CoordinatorDashboard />}
-                            <button onClick={handleLogout}>Logout</button>
+                            {user.role === 'student' && <StudentDashboard onLogout={handleLogout} />}
+                            {user.role === 'coordinator' && <CoordinatorDashboard onLogout={handleLogout} />}
                         </>
                     ) : <Navigate replace to="/login" />
                 } />
                    {/* Other routes */}
-                     <Route path="/teacher" element={<TeacherDashboard />}>
-                     <Route path="classes" element={<Classes />} />
-                     <Route path="grades" element={<Grades />} />
+                    <Route path="/teacher" element={<TeacherDashboard onLogout={handleLogout} />}>
+                     <Route path="classes" element={<Classes onLogout={handleLogout} />} />
+                     <Route path="grades" element={<Grades onLogout={handleLogout} />} />
+                     <Route path='boundaries' element={<Boundaries onLogout={handleLogout} />} />
+                    </Route>
                    {/* Define other nested routes */}
-                   </Route>
+                    <Route path="/student" element={<StudentDashboard onLogout={handleLogout} />}>
+                     <Route path="classes-s" element={<SClasses onLogout={handleLogout} />} />
+                     <Route path="grades-s" element={<SGrades onLogout={handleLogout} />} />
+                    </Route>
                    {/* Other routes */}
+                   <Route path="/coordinator" element={<StudentDashboard onLogout={handleLogout} />}>
+                     <Route path="overview-c" element={<COverview onLogout={handleLogout} />} />
+                     <Route path="classes-c" element={<CClasses onLogout={handleLogout} />} />
+                   </Route>
             </Routes>
         </Router>
     );

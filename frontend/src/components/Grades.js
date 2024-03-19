@@ -2,11 +2,15 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTable } from 'react-table';
 import axios from 'axios';
 import Modal from 'react-modal';
-import './Grades.css'; // Make sure you have the corresponding CSS file
+import './Grades.css';
 
 Modal.setAppElement('#root');
 
 function Grades() {
+  const [message, setMessage] = useState('');
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [gradesData, setGradesData] = useState([]);
@@ -15,25 +19,20 @@ function Grades() {
     studentId: '',
     classId: '',
     gradeValue: '',
+    totalValue: '',
     trimester: ''
   });
-  
-  // Function to fetch grades
-  const fetchGrades = async () => {
+
+  const fetchGrades = useCallback(async (studentId) => {
     try {
-      const response = await axios.get('/api/grades/3'); // Replace with the actual student ID or parameterize as needed
-      setGradesData(response.data.grades); // Assuming the response has a .grades property with the grades array
+      const response = await axios.get(`/api/grades/${studentId}`);
+      setGradesData(response.data.grades);
     } catch (error) {
       console.error('Error fetching grades:', error);
-      // Handle error here, such as setting an error state to display an error message
     }
-  };
+  }, []);
 
   useEffect(() => {
-    
-    fetchGrades();
-
-    // Fetch students
     const fetchStudents = async () => {
       try {
         const response = await axios.get('/api/students');
@@ -43,7 +42,6 @@ function Grades() {
       }
     };
 
-    // Fetch classes
     const fetchClasses = async () => {
       try {
         const response = await axios.get('/api/classes/4');
@@ -53,34 +51,59 @@ function Grades() {
       }
     };
 
-    fetchGrades();
     fetchStudents();
     fetchClasses();
   }, []);
 
+  const handleStudentChange = (e) => {
+    const studentId = e.target.value;
+    setNewGrade({ ...newGrade, studentId });
+    fetchGrades(studentId);
+  };
+
+  const handleClassChange = (e) => {
+    const classId = e.target.value;
+    setNewGrade({ ...newGrade, classId });
+    fetchGrades(classId); 
+  };
+
+  const handleTrimesterChange = (e) => {
+    const trimester = e.target.value;
+    setNewGrade({ ...newGrade, trimester });
+    fetchGrades({ studentId: newGrade.studentId, classId: newGrade.classId, trimester });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Replace the URL with your actual endpoint URL
       console.log("Submitting new grade:", newGrade);
-      const response = await axios.post('/api/grades', newGrade);
-      console.log(response.data.message);
-      setModalIsOpen(false);
-      await fetchGrades();
-    } catch (error) {
-      console.error('Failed to add grade:', error);
+      const response = await axios.post('/api/grades', {
+        ...newGrade,
+        totalValue: newGrade.totalValue // Include totalValue in the POST request
+      });
+      if (response.data.warningMessage) {
+        setWarningMessage(response.data.warningMessage);
+        setIsWarningModalOpen(true);
+      } else {
+        console.log(response.data.message);
+        setModalIsOpen(false);
+        fetchGrades(newGrade.studentId); // Refresh grades for the selected student after adding a new grade
+      } }
+    catch (error) {
+      // Set the error message to be displayed in the UI
+      setMessage(error.response.data.message || 'Failed to add grade.');
+      setIsErrorModalOpen(true);
     }
   };
 
   const handleDelete = useCallback(async (gradeId) => {
     try {
       await axios.delete(`/api/grades/${gradeId}`);
-      // Refresh grades after deletion without reloading the page
-      await fetchGrades();
+      fetchGrades(newGrade.studentId); // Refresh grades for the selected student after deleting a grade
     } catch (error) {
       console.error('Failed to delete grade:', error);
     }
-  }, []);
+  }, [newGrade.studentId, fetchGrades]);
 
   const data = useMemo(() => gradesData, [gradesData]);
 
@@ -88,7 +111,7 @@ function Grades() {
     () => [
       {
         Header: 'Name',
-        accessor: 'student_name', // accessor is the "key" in the data
+        accessor: 'student_name',
       },
       {
         Header: 'Class',
@@ -110,7 +133,7 @@ function Grades() {
         Header: 'Actions',
         accessor: 'actions',
         Cell: ({ row }) => (
-          <button className="delete-button" onClick={() => handleDelete(row.original.grade_id)}>Delete</button> // Add your deletion logic here
+          <button className="delete-button" onClick={() => handleDelete(row.original.grade_id)}>Delete</button>
         ),
       },
     ],
@@ -129,7 +152,46 @@ function Grades() {
     <div>
       <h2>Grade Management</h2>
       <button className="add-grade-btn" onClick={() => setModalIsOpen(true)}>Add New Grade</button>
-
+      <div className="student-group">
+        <label>
+          <select
+            value={newGrade.studentId}
+            onChange={handleStudentChange}
+            className="student-input"
+          >
+            <option value="">All Students</option>
+            {students.map(student => (
+              <option key={student.user_id} value={student.user_id}>{student.full_name}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <div className="class-group">
+        <label>
+          <select
+            value={newGrade.classId}
+            onChange={handleClassChange}
+            className="class-input"
+          >
+            {classes.map(classItem => (
+              <option key={classItem.class_id} value={classItem.class_id}>{classItem.class_name}</option>
+            ))}
+          </select>
+        </label>
+        <div className="trimester-dropdown">
+ <label>
+    <select
+      value={newGrade.trimester}
+      onChange={handleTrimesterChange}
+      className="b-input"
+    >
+      {[1, 2, 3].map(trimester => (
+        <option key={trimester} value={trimester}>{trimester}</option>
+      ))}
+    </select>
+  </label>
+</div>
+      </div>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
@@ -198,12 +260,52 @@ function Grades() {
                   className="modal-input"
                 />
               </label>
+              <div className="form-group">
+            <label>
+              Total Value:
+              <input
+                type="text"
+                value={newGrade.totalValue}
+                onChange={(e) => setNewGrade({ ...newGrade, totalValue: e.target.value })}
+                className="modal-input"
+              />
+            </label>
+          </div>
             </div>
-            <button className='modal-submit-button' type="submit" >Submit</button>
+            <button className='modal-submit-button' type="submit">Submit</button>
           </form>
         </div>
       </Modal>
+      
+<Modal
+  isOpen={isErrorModalOpen}
+  onRequestClose={() => setIsErrorModalOpen(false)}
+  contentLabel="Error Message"
+  className="modal"
+>
+  <div className="modal-error-header">
+    <h2>Error</h2>
+  </div>
+  <div className="modal-error-body">
+    <div className="warning-message">{message}</div>
+    <button className='modal-error-submit-button' onClick={() => setIsErrorModalOpen(false)}>Close</button>
+  </div>
+</Modal>
 
+<Modal
+  isOpen={isWarningModalOpen}
+  onRequestClose={() => setIsWarningModalOpen(false)}
+  contentLabel="Warning Message"
+  className="modal-warning"
+>
+  <div className="modal-warning-header">
+    <h2>Warning</h2>
+  </div>
+  <div className="modal-warning-body">
+    <div className="warning-message">{warningMessage}</div>
+    <button className='modal-warning-submit-button' onClick={() => setIsWarningModalOpen(false)}>Close</button>
+  </div>
+</Modal>
 
       <table {...getTableProps()}>
         <thead>

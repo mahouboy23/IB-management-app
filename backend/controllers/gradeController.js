@@ -1,13 +1,54 @@
 const db = require('../config/database');
 
 exports.addGrade = async (req, res) => {
-    const { studentId, classId, gradeValue, trimester } = req.body;
+    const { studentId, classId, gradeValue, totalValue, trimester } = req.body;
+    console.log('studentId:', studentId); // Log each variable
+    console.log('classId:', classId);
+    console.log('gradeValue:', gradeValue);
+    console.log('totalValue:', totalValue);
+    console.log('trimester:', trimester);
     try {
+        // Fetch grade boundaries for the class and totalValue
+        const [boundaries] = await db.execute(`
+            SELECT * FROM GradeBoundaries 
+            WHERE class_id = ? AND over_value = ?
+        `, [classId, totalValue]);
+
+        let convertedGrade = gradeValue;
+        let warningMsg = ''; // Declare warningMsg variable and initialize it with an empty string
+        if (boundaries.length) {
+            // Parse the JSON string to get the array of grade boundaries
+            const gradeBoundaries = JSON.parse(boundaries[0].grades);
+
+            // Convert gradeValue to IB scale based on boundaries
+            let isConverted = false;
+            for (let boundary of gradeBoundaries) {
+                const min = Number(boundary.min);
+                const max = Number(boundary.max);
+                if (gradeValue >= min && gradeValue <= max) {
+                    convertedGrade = boundary.ib_grade;
+                    isConverted = true;
+                    break;
+                }
+            }
+            // If grade does not fit any boundary, you might want to handle it differently
+            if (!isConverted) {
+                warningMsg = "Grade does not fit any predefined boundary. Consider reviewing your boundaries.";
+            } else if (boundaries.length === 0) {
+                warningMsg = "No grade boundaries set for this class and total value. Performing automatic conversion.";
+            }
+        } else {
+            // Warn about missing boundaries and perform automatic conversion
+            convertedGrade = Math.ceil((gradeValue / totalValue) * 7);
+            console.warn("No grade boundaries set for this class and total value. Performing automatic conversion.");
+        }
+        console.log('Parameters:', [studentId, classId, convertedGrade, totalValue, trimester]);
+        // Insert the converted grade into the database
         const [result] = await db.execute(
-            `INSERT INTO Grades (student_id, class_id, grade_value, trimester) VALUES (?, ?, ?, ?)`,
-            [studentId, classId, gradeValue, trimester]
+            `INSERT INTO Grades (student_id, class_id, grade_value, total_value, trimester) VALUES (?, ?, ?, ?, ?)`,
+            [studentId, classId, convertedGrade, totalValue, trimester]
         );
-        res.status(201).json({ message: "Grade added successfully", gradeId: result.insertId });
+        res.status(201).json({ message: "Grade added successfully", warningMessage: warningMsg, gradeId: result.insertId });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -22,7 +63,6 @@ exports.getGradesByStudent = async (req, res) => {
                 u.full_name AS student_name, 
                 u.level,
                 c.class_name,
-                c.subject,
                 g.grade_value,
                 g.trimester
             FROM 
@@ -41,6 +81,33 @@ exports.getGradesByStudent = async (req, res) => {
     }
 };
 
+exports.getGradesByClass = async (req, res) => {
+    const { classId } = req.params;
+    try {
+        const [grades] = await db.execute(`
+            SELECT 
+                g.grade_id,
+                u.full_name AS student_name, 
+                u.level,
+                c.class_name,
+                c.subject,
+                g.grade_value,
+                g.trimester
+            FROM 
+                Grades g
+            JOIN 
+                Users u ON g.student_id = u.user_id
+            JOIN 
+                Classes c ON g.class_id = c.class_id
+            WHERE 
+                g.class_id = ?`, 
+            [classId]
+        );
+        res.status(200).json({ message: "Grades fetched successfully", grades });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 
 exports.updateGrade = async (req, res) => {

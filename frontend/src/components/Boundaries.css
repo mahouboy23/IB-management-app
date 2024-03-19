@@ -1,0 +1,167 @@
+/* Boundaries.css */
+
+/* Ensure consistency in form input fields */
+input[type="text"] {
+    width: calc(100% - 16px); /* Adjust width to account for padding */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+  
+  /* Consistent styling for buttons */
+  button {
+    padding: 10px 20px;
+    background-color: #007bff; /* Primary button color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Increase font size for better readability */
+    margin-right: 10px; /* Add space between buttons */
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+  
+  /* Style for displaying warning messages */
+  .warning-message {
+    color: #dc3545; /* Use danger color for warnings */
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  
+  /* Enhancements for list items */
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    background-color: #f8f9fa; /* Light background for list items */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  li button {
+    margin-left: 10px;
+  }
+
+  /* Modal styles */
+.modal {
+  display: flex; /* Use flexbox for centering */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  position: fixed;
+  z-index: 2; /* Ensure it's above other content */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  margin: 0px auto;
+  background-color: rgba(255,255,255,0.5); /* Semi-transparent black background */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto; /* Center in the available space */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%; /* Adjust width as needed */
+  border-radius: 5px;
+  position: relative; /* For positioning the close button */
+}
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Style for the grade range inputs */
+  .grade-range-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .grade-range-inputs input[type="number"] {
+    width: calc(50% - 10px); /* Half width minus margin */
+    padding: 8px;
+    margin: 0 5px; /* Space between min and max inputs */
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+  
+  /* Style for the submit button within the modal */
+  .modal-submit-button {
+    background-color: #007bff; /* Blue color for the submit button */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px; /* Space above the button */
+  }
+  
+  .modal-submit-button:hover {
+    background-color: #0056b3; /* Darker shade of blue for hover state */
+  }
+  
+  /* Add styles for list items displaying boundaries */
+  .boundary-item {
+    background-color: #f8f9fa; /* Light background for list items */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .boundary-item div {
+    margin-bottom: 5px;
+  }
+  
+  /* Add styles for buttons next to each boundary */
+  .edit-button,
+  .delete-button {
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .edit-button {
+    background-color: #ffc107; /* Yellow color for edit button */
+    color: black;
+  }
+  
+  .edit-button:hover {
+    background-color: #e0a800; /* Darker yellow on hover */
+  }
+  
+  .delete-button {
+    background-color: #dc3545; /* Red color for delete button */
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }

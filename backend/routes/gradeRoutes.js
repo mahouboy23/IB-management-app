@@ -8,6 +8,9 @@ router.post('/grades', gradeController.addGrade);
 // Route to get grades by student ID
 router.get('/grades/:studentId', gradeController.getGradesByStudent);
 
+// Route to get grades by class ID
+router.get('/grades/class/:classId', gradeController.getGradesByClass);
+
 // Route to update a grade by grade ID
 router.put('/grades/:gradeId', gradeController.updateGrade);
 

@@ -1,0 +1,143 @@
+/* TeacherDashboard.css */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f4; /* Color for the main content area */
+  }
+  
+  /* Ensures no whitespace on the left */
+  body, html {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .main-content-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .grades-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    background-color: #fff;
+    border-bottom: 2px solid #eaeaea;
+  }
+  
+  .header-search-container {
+    position: relative;
+  }
+  
+  .search-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-75%);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .username {
+    margin-right: 12px;
+    font-weight: bold;
+  }
+  
+  .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #363740; /* Dark background color */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .logo-section h2 {
+    color: #ffffff; /* White color for the logo text */
+    margin-bottom: -100px; /* Space below the logo */
+  }
+  
+  .menu-item {
+    color: #a4a6b3; /* Gray color for menu item text */
+    margin-bottom: 13px;
+    padding: 10px 20px; /* Increased left padding for alignment */
+    font-size: 18px; /* Size of the text */
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+  
+  .menu-item:hover, .menu-item.active {
+    background-color: #5c5f70; /* Lighter background for hover and active state */
+    color: #ffffff; /* White text for readability */
+  }
+  
+  .menu-item svg {
+    margin-right: 10px; /* Space between icon and text */
+    color: inherit; /* Icon color will be the same as the text color */
+  }
+  
+  /* Logout Button Styles */
+  .logout-section button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f44336;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .logout-section button:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Header Styles */
+  .header {
+    width: calc(100% - 250px); /* Full width minus sidebar width */
+    background-color: #363740; /* Dark background color */
+    color: #ffffff; /* White text color */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header .user-info img {
+    margin-right: 10px;
+  }
+  
+  /* Main Content Styles */
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  

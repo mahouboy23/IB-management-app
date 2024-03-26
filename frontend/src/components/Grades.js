@@ -23,9 +23,9 @@ function Grades() {
     trimester: ''
   });
 
-  const fetchGrades = useCallback(async (studentId) => {
+  const fetchGrades = useCallback(async (studentId = '', classId = '', trimester = '') => {
     try {
-      const response = await axios.get(`/api/grades/${studentId}`);
+      const response = await axios.get(`/api/grades/filter/${studentId}/${classId}/${trimester}`);
       setGradesData(response.data.grades);
     } catch (error) {
       console.error('Error fetching grades:', error);
@@ -51,26 +51,49 @@ function Grades() {
       }
     };
 
+    const fetchInitialData = async () => {
+      try {
+        const classesResponse = await axios.get('/api/classes');
+        setClasses(classesResponse.data.classes);
+        const studentsResponse = await axios.get('/api/students');
+        setStudents(studentsResponse.data.students);
+        fetchGrades(); // Fetch all grades initially
+      } catch (error) {
+        console.error('Error fetching initial data:', error);
+      }
+    };
+
     fetchStudents();
     fetchClasses();
-  }, []);
+    fetchInitialData();
+  }, [fetchGrades]);
 
-  const handleStudentChange = (e) => {
+   // Modify handleStudentChange to filter grades based on both student and class
+   const handleStudentChange = (e) => {
     const studentId = e.target.value;
     setNewGrade({ ...newGrade, studentId });
-    fetchGrades(studentId);
+    fetchGrades(studentId, newGrade.classId, newGrade.trimester);
   };
 
-  const handleClassChange = (e) => {
+  // Modify handleClassChange to filter grades and update student dropdown
+  const handleClassChange = async (e) => {
     const classId = e.target.value;
     setNewGrade({ ...newGrade, classId });
-    fetchGrades(classId); 
-  };
+    if (classId) {
+      const studentsResponse = await axios.get(`/api/students/class/${classId}`);
+      setStudents(studentsResponse.data.students);
+    } else {
+      const allStudentsResponse = await axios.get('/api/students');
+      setStudents(allStudentsResponse.data.students);
+    }
+    fetchGrades(newGrade.studentId, classId, newGrade.trimester);
+  };  
 
+  // Modify handleTrimesterChange to filter grades based on trimester
   const handleTrimesterChange = (e) => {
     const trimester = e.target.value;
     setNewGrade({ ...newGrade, trimester });
-    fetchGrades({ studentId: newGrade.studentId, classId: newGrade.classId, trimester });
+    fetchGrades(newGrade.studentId, newGrade.classId, trimester);
   };
 
   const handleSubmit = async (e) => {
@@ -179,17 +202,17 @@ function Grades() {
           </select>
         </label>
         <div className="trimester-dropdown">
- <label>
-    <select
-      value={newGrade.trimester}
-      onChange={handleTrimesterChange}
-      className="b-input"
-    >
-      {[1, 2, 3].map(trimester => (
-        <option key={trimester} value={trimester}>{trimester}</option>
-      ))}
-    </select>
-  </label>
+       <label>
+        <select
+          value={newGrade.trimester}
+          onChange={handleTrimesterChange}
+          className="b-input"
+        >
+         {[1, 2, 3].map(trimester => (
+         <option key={trimester} value={trimester}>{trimester}</option>
+          ))}
+        </select>
+       </label>
 </div>
       </div>
       <Modal

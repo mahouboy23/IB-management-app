@@ -109,6 +109,52 @@ exports.getGradesByClass = async (req, res) => {
     }
 };
 
+exports.getFilteredGrades = async (req, res) => {
+    // Use req.params to access route parameters
+    const studentId = parseInt(req.params.studentId, 10);
+    const classId = parseInt(req.params.classId, 10);
+    const trimester = parseInt(req.params.trimester, 10);
+
+    let query = `
+      SELECT 
+        g.grade_id,
+        u.full_name AS student_name, 
+        c.class_name,
+        g.grade_value,
+        g.trimester
+      FROM 
+        Grades g
+      JOIN 
+        Users u ON g.student_id = u.user_id
+      JOIN 
+        Classes c ON g.class_id = c.class_id
+      WHERE 1=1
+    `;
+    const params = [];
+    
+    if (!isNaN(studentId)) {
+      query += ` AND g.student_id = ?`;
+      params.push(studentId);
+    }
+    if (!isNaN(classId)) {
+      query += ` AND g.class_id = ?`;
+      params.push(classId);
+    }
+    if (!isNaN(trimester)) {
+      query += ` AND g.trimester = ?`;
+      params.push(trimester);
+    }
+
+    try {
+      const [grades] = await db.execute(query, params);
+      res.status(200).json({ message: "Grades fetched successfully", grades });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+};
+
+
+
 
 exports.updateGrade = async (req, res) => {
     const { gradeId } = req.params; 

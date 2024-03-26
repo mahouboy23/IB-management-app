@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const gradeController = require('../controllers/gradeController');
+const classController = require('../controllers/classController');
 
 // Route to add a new grade
 router.post('/grades', gradeController.addGrade);
@@ -16,5 +17,13 @@ router.put('/grades/:gradeId', gradeController.updateGrade);
 
 // Route to delete a grade by grade ID
 router.delete('/grades/:gradeId', gradeController.deleteGrade);
+
+router.get('/grades/filter/:studentId?/:classId?/:trimester?', gradeController.getFilteredGrades);
+
+// New route to get all classes
+router.get('/classes', classController.getAllClasses);
+
+// New route to get all students
+router.get('/students', classController.getAllStudents);
 
 module.exports = router;

@@ -182,7 +182,7 @@ function Grades() {
             onChange={handleStudentChange}
             className="student-input"
           >
-            <option value="">All Students</option>
+            <option value="0">None</option>
             {students.map(student => (
               <option key={student.user_id} value={student.user_id}>{student.full_name}</option>
             ))}

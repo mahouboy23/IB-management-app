@@ -12,6 +12,7 @@ import SClasses from './components/Classes-s';
 import SGrades from './components/Grades-s';
 import COverview from './components/Overview-c'
 import CClasses from './components/Classes-c';
+import Users from './components/Users';
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -62,8 +63,9 @@ const App = () => {
                      <Route path="grades-s" element={<SGrades onLogout={handleLogout} />} />
                     </Route>
                    {/* Other routes */}
-                   <Route path="/coordinator" element={<StudentDashboard onLogout={handleLogout} />}>
-                     <Route path="overview-c" element={<COverview onLogout={handleLogout} />} />
+                   <Route path="/coordinator" element={<CoordinatorDashboard onLogout={handleLogout} />}>
+                     <Route path="users" element={<Users onLogout={handleLogout} />} />
+                     <Route path="overview" element={<COverview onLogout={handleLogout} />} />
                      <Route path="classes-c" element={<CClasses onLogout={handleLogout} />} />
                    </Route>
             </Routes>

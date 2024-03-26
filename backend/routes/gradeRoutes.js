@@ -26,4 +26,6 @@ router.get('/classes', classController.getAllClasses);
 // New route to get all students
 router.get('/students', classController.getAllStudents);
 
+router.get('/grades/report/:classId', gradeController.getClassPerformanceReport);
+
 module.exports = router;

@@ -190,3 +190,30 @@ exports.deleteGrade = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.getClassPerformanceReport = async (req, res) => {
+    const { classId } = req.params; // Now using req.params to get classId
+
+    try {
+        // Query to get average, best, and worst grades for a specific class
+        const [grades] = await db.execute(`
+            SELECT 
+                g.student_id, 
+                u.full_name, 
+                AVG(g.grade_value) AS average_grade, 
+                MAX(g.grade_value) AS best_grade, 
+                MIN(g.grade_value) AS worst_grade
+            FROM Grades g
+            INNER JOIN Users u ON g.student_id = u.user_id
+            WHERE g.class_id = ?
+            GROUP BY g.student_id, u.full_name
+        `, [classId]);
+
+        res.status(200).json({ 
+            message: "Class performance report fetched successfully", 
+            grades
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

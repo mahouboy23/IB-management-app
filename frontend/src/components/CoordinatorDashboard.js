@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faBook, faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faBook, faCog, faSearch, faIdCard } from '@fortawesome/free-solid-svg-icons';
 import './CoordinatorDashboard.css';
 
 function CoordinatorDashboard({ onLogout }) {
@@ -15,6 +15,9 @@ function CoordinatorDashboard({ onLogout }) {
         <nav className="menu-section">
           <NavLink exact to="/coordinator/overview" activeClassName="active" className="menu-item">
             <FontAwesomeIcon icon={faHome} /> Overview
+          </NavLink>
+          <NavLink exact to="/coordinator/users" activeClassName="active" className="menu-item">
+            <FontAwesomeIcon icon={faIdCard} /> Users
           </NavLink>
           <NavLink to="/coordinator/classes-c" activeClassName="active" className="menu-item">
             <FontAwesomeIcon icon={faBook} /> Classes

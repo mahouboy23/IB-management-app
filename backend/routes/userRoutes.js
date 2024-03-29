@@ -4,6 +4,8 @@ const userController = require('../controllers/userController'); // Update the p
 
 router.post('/users', userController.addUser);
 router.get('/users/get', userController.getUsers);
+router.get('/users/teacher', userController.getAllTeachers);
+router.get('/users/student', userController.getAllStudents);
 router.put('/users/update/:userId', userController.updateUser);
 router.delete('/users/:userId', userController.deleteUser);
 router.get('/users/dashboard', userController.getDashboardOverview);

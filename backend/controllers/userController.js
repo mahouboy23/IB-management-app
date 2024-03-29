@@ -71,6 +71,24 @@ exports.getAllTeachers = async (req, res) => {
     }
 };
 
+exports.getAllStudents = async (req, res) => {
+    try {
+        const [students] = await db.execute(`
+            SELECT 
+                user_id,
+                full_name
+            FROM 
+                Users
+            WHERE 
+                role = 'student'
+        `);
+        res.status(200).json({ message: "All teachers fetched successfully", students });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 // New method to get all coordinators
 exports.getAllCoordinators = async (req, res) => {
     try {

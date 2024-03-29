@@ -1,3 +1,18 @@
+.sidebar {
+  position: fixed; /* Fix the sidebar's position relative to the viewport */
+  width: 250px; /* Adjust the width as needed */
+  height: 100%; /* Make the sidebar fill the height of its parent, which is now the viewport */
+  overflow-y: auto; /* Enable scrolling within the sidebar if the content overflows */
+  background-color: #333; /* Example background color */
+  color: #fff; /* Example text color */
+}
+
+.main-content {
+  margin-left: 250px; /* Adjust this value to match the sidebar's width */
+  width: calc(100% - 250px); /* Adjust the main content width to take up the remaining space */
+  overflow-y: auto; /* Enable scrolling within the main content if the content overflows */
+}
+
 /* TeacherDashboard.css */
 .dashboard-container {
     display: flex;

@@ -1,15 +1,45 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faBook, faChalkboardTeacher, faShapes, faClipboardList, faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { jwtDecode } from 'jwt-decode';  // Corrected import
 import './TeacherDashboard.css';
 
 function TeacherDashboard({ onLogout }) {
+  const navigate = useNavigate(); // Using useNavigate hook for navigation
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // If no token is found, redirect to the login page
+      navigate('/login');
+    } else {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+      } catch (error) {
+        console.error("Token decoding failed", error);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    }
+  }, [navigate]);
+
   const username = localStorage.getItem('fullName');
+
+  const handleLogout = () => {
+    console.log('Logging out...');
+    localStorage.removeItem('token');
+    localStorage.removeItem('fullName');
+    setUser(null);
+    navigate('/login'); // Navigate to the login page after logout
+  };
+
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
-      <div className="logo-section">
+        <div className="logo-section">
           <h2>IB management</h2>
         </div>
         <nav className="menu-section">
@@ -33,14 +63,14 @@ function TeacherDashboard({ onLogout }) {
           </NavLink>
         </nav>
         <div className="logout-section">
-          <button onClick={onLogout}>Log out</button>
+          <button onClick={handleLogout}>Log out</button>
         </div>
       </aside>
       <main className="main-content">
-       <div className="grades-header">
+        <div className="grades-header">
           <div className="header-search-container">
             <input type="text" placeholder="Search" className="search-input" />
-            <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button> 
+            <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button>
           </div>
           <div className="user-profile">
             <span className="username">{username}</span> {/* Dynamic username */}
@@ -52,7 +82,5 @@ function TeacherDashboard({ onLogout }) {
     </div>
   );
 }
-
-
 
 export default TeacherDashboard;

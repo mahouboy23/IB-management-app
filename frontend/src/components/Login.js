@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import './Login.css';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,9 +17,8 @@ const Login = ({ onLogin }) => {
     });
 
     if (response.ok) {
-      const { token, fullName } = await response.json();
-      localStorage.setItem('fullName', fullName); // Store the full name in local storage
-      onLogin(token, fullName); // Pass the full name to the login handler
+      const { token } = await response.json();
+      login(token);
     } else {
       const { message } = await response.json();
       setErrorMessage(message || 'Login failed');

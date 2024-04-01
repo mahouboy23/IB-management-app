@@ -20,12 +20,16 @@ exports.login = async (req, res) => {
 
             if (isValid) {
                 if (!process.env.JWT_SECRET) {
-                    throw new Error('JWT_SECRET is not defined');
-                }                  
-                const token = jwt.sign({ userId: user[0].user_id, role: user[0].role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-                return res.json({ message: "Login successful", token, fullName: user[0].full_name });
-            }
+                  throw new Error('JWT_SECRET is not defined');
+                }
+                const token = jwt.sign(
+                  { userId: user[0].user_id, role: user[0].role, fullName: user[0].full_name },
+                  process.env.JWT_SECRET,
+                  { expiresIn: '1h' }
+                );
+            
+                return res.json({ message: "Login successful", token });
+              }
         }
 
         res.status(401).json({ message: "Authentication failed" });

@@ -5,9 +5,8 @@ import { faHome, faBook, faChalkboardTeacher, faClipboardList, faCog, faSearch }
 import { AuthContext } from '../contexts/AuthContext';
 import './StudentDashboard.css';
 
-function StudentDashboard({ onLogout }) {
-  const username = localStorage.getItem('fullName');
-  const { logout } = useContext(AuthContext);
+function StudentDashboard() {
+  const { user, logout } = useContext(AuthContext);
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -42,7 +41,7 @@ function StudentDashboard({ onLogout }) {
             <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button> 
           </div>
           <div className="user-profile">
-            <span className="username">{username}</span> {/* Dynamic username */}
+            <span className="username">{user?.fullName}</span>
             <img src="/MHA_IB_M_logo.png" alt="User" className="user-image" />
           </div>
         </div>

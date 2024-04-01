@@ -6,8 +6,8 @@ import { AuthContext } from '../contexts/AuthContext';
 import './CoordinatorDashboard.css';
 
 function CoordinatorDashboard() {
-  const username = localStorage.getItem('fullName');
-  const { logout } = useContext(AuthContext);
+
+  const { user, logout } = useContext(AuthContext);
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -39,7 +39,7 @@ function CoordinatorDashboard() {
             <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button> 
           </div>
           <div className="user-profile">
-            <span className="username">{username}</span> {/* Dynamic username */}
+            <span className="username">{user?.fullName}</span>
             <img src="/MHA_IB_M_logo.png" alt="User" className="user-image" />
           </div>
         </div>

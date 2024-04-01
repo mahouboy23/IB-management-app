@@ -1,0 +1,62 @@
+.classes-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.classes-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.classes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.class-item {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.class-item:hover {
+    background-color: #e0e0e0;
+}
+
+.class-item.selected {
+    background-color: #d0d0d0;
+}
+
+.class-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.class-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+}
+
+.class-students-container {
+    margin-top: 40px;
+}
+
+.class-students-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.class-students-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.class-student-item {
+    margin-bottom: 5px;
+}

@@ -1,15 +1,13 @@
 import React, { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { NavLink, Outlet } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faBook, faChalkboardTeacher, faShapes, faClipboardList, faCog, faSearch } from '@fortawesome/free-solid-svg-icons'; 
-import { AuthContext } from '../contexts/AuthContext';
 import './TeacherDashboard.css';
 
 function TeacherDashboard() {
-  
-  const username = localStorage.getItem('fullName');
 
-  const { logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <div className="dashboard-container">
@@ -48,7 +46,7 @@ function TeacherDashboard() {
             <button type="button" className="search-button"><FontAwesomeIcon icon={faSearch} /></button>
           </div>
           <div className="user-profile">
-            <span className="username">{username}</span> {/* Dynamic username */}
+          <span className="username">{user?.fullName}</span> {/* Dynamic username */}
             <img src="/MHA_IB_M_logo.png" alt="User" className="user-image" />
           </div>
         </div>

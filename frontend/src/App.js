@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode'; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext'; 
 import Login from './components/Login';
 import TeacherDashboard from './components/TeacherDashboard';
 import StudentDashboard from './components/StudentDashboard';
@@ -40,6 +41,7 @@ const App = () => {
 
     return (
         <Router>
+            <AuthProvider>
             <Routes>
                 <Route path="/login" element={!user ? <Login onLogin={handleLogin} /> : <Navigate replace to="/" />} />
                 <Route path="/" element={
@@ -69,6 +71,7 @@ const App = () => {
                      <Route path="classes-c" element={<CClasses onLogout={handleLogout} />} />
                    </Route>
             </Routes>
+            </AuthProvider>
         </Router>
     );
 };

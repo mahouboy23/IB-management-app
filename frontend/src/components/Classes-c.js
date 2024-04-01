@@ -132,13 +132,14 @@ function ClassManagement() {
 
   const handleAssignStudent = async (classItem) => {
     setSelectedClass(classItem);
-    const assignedStudents = await fetchStudentsByClass(classItem.class_id);
-    console.log("Assigned students:", assignedStudents); // Add this line
-    const assignedStudentIds = new Set(assignedStudents.map(student => student.user_id));
-    const filteredStudents = students.filter(student => !assignedStudentIds.has(student.user_id));
-    console.log("Filtered students for assignment:", filteredStudents); // Add this line
-    setAvailableStudents(filteredStudents);
-    setAssignModalIsOpen(true);
+    try {
+        const response = await axios.get(`/api/classes/${classItem.class_id}/students/not-in-class`);
+        console.log("Students not in class:", response.data.students);
+        setAvailableStudents(response.data.students);
+        setAssignModalIsOpen(true);
+    } catch (error) {
+        console.error('Error fetching students not in class:', error);
+    }
 };
 
 const AssignStudent = async (studentId) => {

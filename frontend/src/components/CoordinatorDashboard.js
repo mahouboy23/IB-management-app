@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faBook, faCog, faSearch, faIdCard } from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from '../contexts/AuthContext';
 import './CoordinatorDashboard.css';
 
-function CoordinatorDashboard({ onLogout }) {
+function CoordinatorDashboard() {
   const username = localStorage.getItem('fullName');
+  const { logout } = useContext(AuthContext);
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -27,7 +29,7 @@ function CoordinatorDashboard({ onLogout }) {
           </NavLink>
         </nav>
         <div className="logout-section">
-          <button onClick={onLogout}>Log out</button>
+          <button onClick={logout}>Log out</button>
         </div>
       </aside>
       <main className="main-content">

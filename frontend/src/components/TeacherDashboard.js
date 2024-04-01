@@ -1,40 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faBook, faChalkboardTeacher, faShapes, faClipboardList, faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { jwtDecode } from 'jwt-decode';  // Corrected import
+import { faHome, faBook, faChalkboardTeacher, faShapes, faClipboardList, faCog, faSearch } from '@fortawesome/free-solid-svg-icons'; 
+import { AuthContext } from '../contexts/AuthContext';
 import './TeacherDashboard.css';
 
-function TeacherDashboard({ onLogout }) {
-  const navigate = useNavigate(); // Using useNavigate hook for navigation
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      // If no token is found, redirect to the login page
-      navigate('/login');
-    } else {
-      try {
-        const decoded = jwtDecode(token);
-        setUser(decoded);
-      } catch (error) {
-        console.error("Token decoding failed", error);
-        localStorage.removeItem('token');
-        navigate('/login');
-      }
-    }
-  }, [navigate]);
-
+function TeacherDashboard() {
+  
   const username = localStorage.getItem('fullName');
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    localStorage.removeItem('token');
-    localStorage.removeItem('fullName');
-    setUser(null);
-    navigate('/login'); // Navigate to the login page after logout
-  };
+  const { logout } = useContext(AuthContext);
 
   return (
     <div className="dashboard-container">
@@ -63,7 +38,7 @@ function TeacherDashboard({ onLogout }) {
           </NavLink>
         </nav>
         <div className="logout-section">
-          <button onClick={handleLogout}>Log out</button>
+          <button onClick={logout}>Log out</button>
         </div>
       </aside>
       <main className="main-content">

@@ -119,6 +119,26 @@ exports.deleteClass = async (req, res) => {
     }
 };
 
+exports.getStudentsNotInClass = async (req, res) => {
+    const { classId } = req.params;
+    try {
+        const [studentsNotInClass] = await db.execute(`
+            SELECT
+                u.user_id,
+                u.full_name
+            FROM
+                Users u
+            WHERE
+                u.role = 'student' AND u.user_id NOT IN (
+                    SELECT student_id FROM StudentClasses WHERE class_id = ?
+                )
+        `, [classId]);
+        res.status(200).json({ message: "Students not in class fetched successfully", students: studentsNotInClass });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.assignStudentToClass = async (req, res) => {
     const { classId, studentId } = req.params;
     try {

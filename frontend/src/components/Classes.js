@@ -37,19 +37,19 @@ const Classes = () => {
     };
 
     return (
-        <div className="classes-container">
-            <h2 className="classes-title">My Classes</h2>
-            <div className="classes-list">
+        <div className="student-classes-container">
+            <h2 className="student-classes-title">My Classes</h2>
+            <div className="student-classes-list">
                 {classes.map((classItem) => (
                     <div
                         key={classItem.class_id}
-                        className={`class-item ${selectedClass?.class_id === classItem.class_id ? 'selected' : ''}`}
+                        className={`student-class-item ${selectedClass?.class_id === classItem.class_id ? 'selected' : ''}`}
                         onClick={() => handleClassClick(classItem)}
                     >
-                        <h3 className="class-name">{classItem.class_name}</h3>
-                        <p className="class-details">
-                            <span className="class-subject">Subject: {classItem.subject}</span>
-                            <span className="class-grade">Grade: {classItem.grade_level}</span>
+                        <h3 className="student-class-name">{classItem.class_name}</h3>
+                        <p className="student-class-details">
+                            <span className="student-class-subject">Subject: {classItem.subject}</span>
+                            <span className="student-class-grade">Grade: {classItem.grade_level}</span>
                         </p>
                     </div>
                 ))}

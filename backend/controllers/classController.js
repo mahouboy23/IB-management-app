@@ -41,6 +41,31 @@ exports.getStudentsByClass = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   };
+
+  exports.getClassesByStudent = async (req, res) => {
+    const { studentId } = req.params;
+    try {
+        const [classes] = await db.execute(`
+            SELECT 
+                c.class_id,
+                c.class_name,
+                c.grade_level,
+                c.subject,
+                u.full_name AS teacher_name
+            FROM 
+                Classes c
+            JOIN
+                StudentClasses sc ON c.class_id = sc.class_id
+            JOIN
+                Users u ON c.teacher_id = u.user_id
+            WHERE 
+                sc.student_id = ?
+        `, [studentId]);
+        res.status(200).json({ message: "Classes fetched successfully", classes });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
   
 
   exports.getAllClasses = async (req, res) => {

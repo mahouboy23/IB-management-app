@@ -20,6 +20,8 @@ router.delete('/grades/:gradeId', gradeController.deleteGrade);
 
 router.get('/grades/filter/:studentId?/:classId?/:trimester?', gradeController.getFilteredGrades);
 
+router.get('/grades/filter/:studentId/:classId/:trimester', gradeController.getGradesByFilter);
+
 // New route to get all classes
 router.get('/classes', classController.getAllClasses);
 

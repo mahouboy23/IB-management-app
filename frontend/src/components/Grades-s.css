@@ -1,0 +1,100 @@
+.grades-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.grades-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.class-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.class-item {
+    background-color: #fff;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.class-item:hover {
+    background-color: #e0e0e0;
+}
+
+.class-item.selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.class-name {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.class-details {
+    font-size: 12px;
+    color: #666;
+}
+
+.grades-list {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.grades-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.trimester-filter {
+    margin-bottom: 20px;
+}
+
+.trimester-filter label {
+    margin-right: 10px;
+}
+
+.grades-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.grade-item {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.grade-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.grade-date {
+    font-size: 14px;
+    color: #666;
+    margin-left: 10px;
+}
+
+.grade-trimester {
+    font-size: 14px;
+    color: #007bff;
+    margin-left: 10px;
+}

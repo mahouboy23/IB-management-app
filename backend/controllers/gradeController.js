@@ -1,7 +1,7 @@
 const db = require('../config/database');
 
 exports.addGrade = async (req, res) => {
-    const { studentId, classId, gradeValue, totalValue, trimester } = req.body;
+    const { studentId, classId, gradeValue, totalValue, trimester, date } = req.body;
     console.log('studentId:', studentId); // Log each variable
     console.log('classId:', classId);
     console.log('gradeValue:', gradeValue);
@@ -42,11 +42,14 @@ exports.addGrade = async (req, res) => {
             convertedGrade = Math.ceil((gradeValue / totalValue) * 7);
             console.warn("No grade boundaries set for this class and total value. Performing automatic conversion.");
         }
-        console.log('Parameters:', [studentId, classId, convertedGrade, totalValue, trimester]);
-        // Insert the converted grade into the database
+        const today = new Date();
+        const formattedDate = today.toISOString().slice(0, 10); // Format the date as 'YYYY-MM-DD'
+
+        console.log('Parameters:', [studentId, classId, convertedGrade, totalValue, trimester, formattedDate]);
+        // Insert the converted grade and today's date into the database
         const [result] = await db.execute(
-            `INSERT INTO Grades (student_id, class_id, grade_value, total_value, trimester) VALUES (?, ?, ?, ?, ?)`,
-            [studentId, classId, convertedGrade, totalValue, trimester]
+            `INSERT INTO Grades (student_id, class_id, grade_value, total_value, trimester, date) VALUES (?, ?, ?, ?, ?, ?)`,
+            [studentId, classId, convertedGrade, totalValue, trimester, formattedDate]
         );
         res.status(201).json({ message: "Grade added successfully", warningMessage: warningMsg, gradeId: result.insertId });
     } catch (error) {
@@ -65,6 +68,7 @@ exports.getGradesByStudent = async (req, res) => {
                 c.class_name,
                 g.grade_value,
                 g.trimester
+                c.subject
             FROM 
                 Grades g
             JOIN 
@@ -75,6 +79,57 @@ exports.getGradesByStudent = async (req, res) => {
                 g.student_id = ?`, 
             [studentId]
         );
+        res.status(200).json({ message: "Grades fetched successfully", grades });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getGradesByFilter = async (req, res) => {
+    const { studentId, classId, trimester } = req.params;
+    try {
+        let query = `
+        SELECT 
+        g.grade_id,
+        g.grade_value,
+        g.total_value,
+        g.trimester,
+        c.class_name,
+        c.subject,
+        u.full_name AS student_name,
+        g.date,
+        CASE
+            WHEN g.grade_value >= 0.8 * g.total_value THEN 'High'
+            WHEN g.grade_value >= 0.6 * g.total_value THEN 'Medium'
+            ELSE 'Low'
+        END AS level
+    FROM 
+        Grades g
+    JOIN
+        Classes c ON g.class_id = c.class_id
+    JOIN
+        Users u ON g.student_id = u.user_id
+    WHERE 1=1
+`;
+
+        const params = [];
+
+        if (studentId && studentId !== '0') {
+            query += ` AND g.student_id = ?`;
+            params.push(studentId);
+        }
+
+        if (classId) {
+            query += ` AND g.class_id = ?`;
+            params.push(classId);
+        }
+
+        if (trimester) {
+            query += ` AND g.trimester = ?`;
+            params.push(trimester);
+        }
+
+        const [grades] = await db.execute(query, params);
         res.status(200).json({ message: "Grades fetched successfully", grades });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -121,7 +176,8 @@ exports.getFilteredGrades = async (req, res) => {
         u.full_name AS student_name, 
         c.class_name,
         g.grade_value,
-        g.trimester
+        g.trimester,
+        DATE_FORMAT(g.date, '%Y-%m-%d') AS date
       FROM 
         Grades g
       JOIN 
@@ -150,27 +206,6 @@ exports.getFilteredGrades = async (req, res) => {
       res.status(200).json({ message: "Grades fetched successfully", grades });
     } catch (error) {
       res.status(500).json({ message: error.message });
-    }
-};
-
-
-
-
-exports.updateGrade = async (req, res) => {
-    const { gradeId } = req.params; 
-    const { gradeValue, trimester } = req.body;
-    try {
-        const [result] = await db.execute(
-            `UPDATE Grades SET grade_value = ?, trimester = ? WHERE grade_id = ?`,
-            [gradeValue, trimester, gradeId]
-        );
-        if (result.affectedRows) {
-            res.status(200).json({ message: "Grade updated successfully" });
-        } else {
-            res.status(404).json({ message: "Grade not found" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
     }
 };
 

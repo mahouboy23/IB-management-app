@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
 import './Boundaries.css';
 
 function Boundaries() {
   const [boundaries, setBoundaries] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
   const [newBoundary, setNewBoundary] = useState({
@@ -20,16 +22,33 @@ function Boundaries() {
     ]
   });
 
+  const { user } = useContext(AuthContext);
+  const teacherId = user?.userId;
+
   useEffect(() => {
     fetchBoundaries();
-  }, []);
+    fetchClasses();
+  }, [teacherId]);
 
   const fetchBoundaries = async () => {
     try {
-      const response = await axios.get('/api/grade-boundaries');
-      setBoundaries(response.data.boundaries);
+      if (teacherId) {
+        const response = await axios.get(`/api/grade-boundaries/${teacherId}`);
+        setBoundaries(response.data.boundaries);
+      }
     } catch (error) {
       console.error('Error fetching grade boundaries:', error);
+    }
+  };
+
+  const fetchClasses = async () => {
+    try {
+      if (teacherId) {
+        const response = await axios.get(`/api/classes/${teacherId}`);
+        setClasses(response.data.classes);
+      }
+    } catch (error) {
+      console.error('Error fetching classes:', error);
     }
   };
 
@@ -102,13 +121,18 @@ function Boundaries() {
               &times;
             </span>
             <h2>Add Grade Boundary</h2>
-            <input
-              type="text"
+            <select
               name="classId"
               value={newBoundary.classId}
               onChange={handleBoundaryChange}
-              placeholder="Class ID"
-            />
+            >
+              <option value="">Select a class</option>
+              {classes.map(classItem => (
+                <option key={classItem.class_id} value={classItem.class_id}>
+                  {classItem.class_name}
+                </option>
+              ))}
+            </select>
             <input
               type="number"
               name="overValue"
@@ -153,7 +177,7 @@ function Boundaries() {
         <tbody>
           {boundaries.map((boundary) => (
             <tr key={boundary.boundary_id}>
-              <td>{boundary.class_id}</td>
+              <td>{classes.find(classItem => classItem.class_id === boundary.class_id)?.class_name}</td>
               <td>{boundary.over_value}</td>
               <td>
                 {boundary.grades.map((grade, index) => (

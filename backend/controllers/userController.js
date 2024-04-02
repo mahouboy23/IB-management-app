@@ -1,11 +1,16 @@
 const db = require('../config/database');
+const bcrypt = require('bcryptjs');
 
 exports.addUser = async (req, res) => {
     const { username, password, role, full_name } = req.body;
     try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [result] = await db.execute(`
             INSERT INTO Users (username, password, role, full_name) VALUES (?, ?, ?, ?)
-        `, [username, password, role, full_name]); // Remember to hash the password in a real application
+        `, [username, hashedPassword, role, full_name]);
+
         res.status(201).json({ message: "User added successfully", userId: result.insertId });
     } catch (error) {
         res.status(500).json({ message: error.message });

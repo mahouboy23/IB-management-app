@@ -49,18 +49,22 @@ exports.deleteBoundary = async (req, res) => {
     }
 };
 
-exports.getBoundaries = async (req, res) => {
+exports.getBoundariesByTeacher = async (req, res) => {
+    const { teacherId } = req.params;
     try {
         const [boundaries] = await db.execute(
-            `SELECT * FROM GradeBoundaries ORDER BY class_id, over_value ASC`
+            `SELECT * FROM GradeBoundaries WHERE class_id IN (
+                SELECT class_id FROM Classes WHERE teacher_id = ?
+            ) ORDER BY class_id, over_value ASC`,
+            [teacherId]
         );
-        // Assuming grades are stored as a JSON string, parse them back into arrays
         const parsedBoundaries = boundaries.map(boundary => ({
             ...boundary,
-            grades: JSON.parse(boundary.grades) // Convert grades JSON string back to array
+            grades: JSON.parse(boundary.grades)
         }));
         res.status(200).json({ message: "Grade boundaries fetched successfully", boundaries: parsedBoundaries });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+

@@ -2,30 +2,29 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #FFFFFF; /* To match the mockup's white background */
-  border-radius: 10px; /* Rounded corners for the table */
-  overflow: hidden; /* Ensures the border radius applies to children elements */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  margin-top: 20px; /* Space above the table */
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
 th, td {
-  padding: 12px 15px; /* Spacing within cells */
+  padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #dddddd; /* Light border for separating rows */
+  border-bottom: 1px solid #dddddd;
 }
 
 th {
-  background-color: #f8f9fa; /* Light gray background for headers to match mockup */
-  color: #333333; /* Dark text for contrast */
-  font-weight: 500; /* Semi-bold text */
+  background-color: #f8f9fa;
+  color: #333333;
+  font-weight: 500;
 }
 
 tbody tr:hover {
-  background-color: #f1f3f5; /* Slightly darker background on row hover */
+  background-color: #f1f3f5;
 }
 
-/* Styling for the pagination at the bottom of the table */
 .pagination {
   display: flex;
   justify-content: center;
@@ -36,16 +35,16 @@ tbody tr:hover {
   margin: 0 5px;
   padding: 5px 10px;
   border-radius: 5px;
-  border: 1px solid #dee2e6; /* Light border for page numbers */
+  border: 1px solid #dee2e6;
   cursor: pointer;
 }
 
 .page-number:hover, .page-number.active {
-  background-color: #e9ecef; /* Slightly darker background for active/hover page number */
+  background-color: #e9ecef;
 }
 
 .add-grade-btn {
-  background-color: #28a745; /* Green background color for "Add Grade" button */
+  background-color: #28a745;
   color: white;
   padding: 8px 16px;
   border: none;
@@ -53,18 +52,17 @@ tbody tr:hover {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.2s ease;
-  margin-bottom: 20px; /* Space below the button */
+  margin-bottom: 20px;
   margin-right: 10px;
 }
 
 .add-grade-btn:hover {
-  background-color: #218838; /* Darker green on hover */
+  background-color: #218838;
 }
 
-/* Delete button styling */
 .delete-button {
   color: white;
-  background-color: #dc3545; /* Keep delete button red */
+  background-color: #dc3545;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
@@ -73,26 +71,37 @@ tbody tr:hover {
 }
 
 .delete-button:hover {
-  background-color: #c82333; /* Slightly darker red when hovered */
+  background-color: #c82333;
 }
 
-/* Modal form styling */
 .modal {
-  border: 1px solid #dee2e6;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
   background-color: #fff;
-  padding: 25px;
-  border-radius: 10px;
-  width: fit-content;
-  margin: 150px auto; /* Center the modal */
+  padding: 20px;
+  border-radius: 4px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #dee2e6;
-  padding-bottom: 0px;
-  margin-bottom: 450px;
+  margin-bottom: 20px;
 }
 
 .modal-close-button {
@@ -103,15 +112,23 @@ tbody tr:hover {
 }
 
 .modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-right: 100px;
+  background-color: #fff;
+    padding: 60px;
+    border-radius: 4px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-bottom: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .modal-input {
   width: 100%;
-  padding: 5px;
+  padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #ced4da;
   border-radius: 5px;
@@ -119,72 +136,63 @@ tbody tr:hover {
 
 .modal-submit-button {
   padding: 10px;
-  background-color: #007bff; /* Blue color for the submit button */
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.modal-cancel-button {
+  padding: 10px;
+  background-color: #ff2424;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .modal-submit-button:hover {
-  background-color: #0069d9; /* Darker shade of blue for hover state */
+  background-color: #0069d9;
 }
 
-.trimester-buttons button {
+.modal-cancel-button:hover {
+  background-color: #d90000;
+}
+
+.trimester-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.trimester-button {
   background: none;
   border: 1px solid #ccc;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-  vertical-align: middle;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
-.trimester-buttons .active,
-.trimester-buttons button:hover {
+.trimester-button.active {
   background: #007bff;
   border-color: #007bff;
   color: white;
 }
 
-.b-group {
-  display: inline-block; /* Display elements in the same line */
-  margin-right: 10px; /* Add margin between elements */
-}
-
-/* Style for the trimester dropdown */
-.trimester-dropdown {
-  display: inline-block; /* Display the dropdown inline with other elements */
-  position: relative; /* Positioning context for the dropdown */
-}
-
-.trimester-dropdown select {
-  padding: 8px 30px 8px 10px; /* Adjust padding to give space for the dropdown arrow */
-  border: 1px solid #ccc; /* Border style */
-  border-radius: 5px; /* Rounded corners */
-  background-color: white; /* Background color */
-  appearance: none; /* Remove default arrow */
-}
-
-.trimester-dropdown:after {
-  content: '\25BC'; /* Unicode character for dropdown arrow */
-  font-size: 12px; /* Adjust size of the arrow */
-  color: #555; /* Color of the arrow */
-  position: absolute; /* Position the arrow */
-  top: 50%; /* Align vertically */
-  right: 10px; /* Distance from the right */
-  transform: translateY(-50%); /* Center vertically */
-  pointer-events: none; /* Allow clicks to pass through */
-}
-
+.b-group,
 .student-group,
-.class-group,
-.trimester-group {
+.class-group {
   display: inline-block;
   margin-right: 10px;
 }
 
-/* Style for the dropdown menus */
 .select-dropdown {
   position: relative;
 }
@@ -195,10 +203,9 @@ tbody tr:hover {
   border-radius: 5px;
   background-color: white;
   appearance: none;
-  width: 200px; /* Set a fixed width for consistency */
+  width: 200px;
 }
 
-/* Style for the dropdown arrow */
 .select-dropdown:after {
   content: '\25BC';
   font-size: 12px;
@@ -210,8 +217,9 @@ tbody tr:hover {
   pointer-events: none;
 }
 
-/* Additional styles for input fields */
-.modal-input, .student-input, .class-input, .b-input {
+.student-input,
+.class-input,
+.b-input {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -219,21 +227,14 @@ tbody tr:hover {
   border-radius: 5px;
 }
 
-/* Enhancements for modal submit button for consistency */
-.modal-submit-button {
-  display: block; /* Make the button take the full width */
-  width: 100%;
-  margin-top: 20px; /* Add some space above the button */
-}
-
 .modal-error-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background-color: #dc3545; /* Red background for error header */
-  color: white; /* White text color */
-  border-top-left-radius: 5px; /* Rounded corners for the top of the modal */
+  background-color: #dc3545;
+  color: white;
+  border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
 
@@ -247,36 +248,36 @@ tbody tr:hover {
 
 .modal-error-body {
   padding: 20px;
-  background-color: #fff; /* White background for the body */
-  color: #333; /* Dark text for readability */
-  border-bottom-left-radius: 5px; /* Rounded corners for the bottom of the modal */
+  background-color: #fff;
+  color: #333;
+  border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 
 .modal-error-submit-button {
   padding: 10px 20px;
-  background-color: #dc3545; /* Primary button color */
+  background-color: #dc3545;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 20px; /* Space above the button */
+  margin-top: 20px;
 }
 
 .modal-error-submit-button:hover {
-  background-color: #b30000ac; /* Darker shade on hover */
+  background-color: #c82333;
 }
 
 .warning-message {
-  color: #dc3545; /* Use danger color for warnings */
-  margin-bottom: 20px; /* Space below the warning message */
-  font-size: 16px; /* Slightly larger font size for visibility */
+  color: #dc3545;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
-/* Warning Message Modal Styles */
+
 .modal-warning-header {
-  background-color: orange; /* Orange background for warning header */
-  color: white;
+  background-color: #ffc107;
+  color: #212529;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
@@ -284,7 +285,7 @@ tbody tr:hover {
 .modal-warning-close-button {
   background: none;
   border: none;
-  color: white;
+  color: #212529;
   font-size: 1.5rem;
   cursor: pointer;
 }
@@ -299,8 +300,8 @@ tbody tr:hover {
 
 .modal-warning-submit-button {
   padding: 10px 20px;
-  background-color: orange; /* Orange button color */
-  color: #fff;
+  background-color: #ffc107;
+  color: #212529;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -309,11 +310,5 @@ tbody tr:hover {
 }
 
 .modal-warning-submit-button:hover {
-  background-color: #cc8400; /* Darker shade on hover */
-}
-
-.warning-message {
-  color: orange; /* Orange text for warnings */
-  margin-bottom: 20px;
-  font-size: 16px;
+  background-color: #e0a800;
 }

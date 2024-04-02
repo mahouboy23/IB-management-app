@@ -2,12 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import { useTable } from 'react-table';
+import './Users.css';
 
 Modal.setAppElement('#root');
 
 function Users() {
   const [users, setUsers] = useState([]);
-  const [search, setSearch] = useState(''); // Define the search state variable
+  const [search, setSearch] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -23,22 +24,12 @@ function Users() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/users/get'); // Make sure this matches your API route
-      console.log('Fetched users:', response.data.users); // Log the fetched data
+      const response = await axios.get('/api/users/get');
       setUsers(response.data.users);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
-
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
-  };
-
-  const handleSearch = () => {
-    fetchUsers(); // Use the search state variable to fetch users
-  };
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +55,7 @@ function Users() {
     setEditingUser(user);
     setFormData({
       username: user.username,
-      password: '', // For security reasons, don't fetch or autofill passwords
+      password: '',
       role: user.role,
       full_name: user.full_name
     });
@@ -106,12 +97,12 @@ function Users() {
     },
     {
       Header: 'Actions',
-      id: 'actions', // Added an ID to avoid warning about missing accessor
+      id: 'actions',
       Cell: ({ row }) => (
-        <>
-          <button onClick={() => handleEdit(row.original)}>Edit</button>
-          <button onClick={() => handleDelete(row.original.user_id)}>Delete</button>
-        </>
+        <div className="action-buttons">
+          <button className="edit-button" onClick={() => handleEdit(row.original)}>Edit</button>
+          <button className="delete-button" onClick={() => handleDelete(row.original.user_id)}>Delete</button>
+        </div>
       )
     }
   ], []);
@@ -120,72 +111,78 @@ function Users() {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
-    prepareRow,
   } = useTable({ columns, data: users });
 
+  const filteredUsers = users.filter(user =>
+    user.full_name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div>
+    <div className="container">
       <h2>Users Management</h2>
-      <input
-        type="text"
-        placeholder="Search users"
-        value={search}
-        onChange={handleSearchChange}
-      />
-      <button onClick={handleSearch}>Search</button>
-      <button onClick={() => setModalIsOpen(true)}>Add New User</button>
+      <div>
+        <input
+          type="text"
+          placeholder="Search users"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button onClick={() => setModalIsOpen(true)}>Add New User</button>
+      </div>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="User Form"
+        className="modal"
       >
-        <h2>{editingUser ? 'Edit User' : 'Add New User'}</h2>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Full Name:
-            <input
-              name="full_name"
-              value={formData.full_name}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Username:
-            <input
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Password:
-            <input
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required={!editingUser}
-            />
-          </label>
-          <label>
-            Role:
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="coordinator">Coordinator</option>
-            </select>
-          </label>
-          <button type="submit">Submit</button>
-          <button onClick={closeModal}>Cancel</button>
-        </form>
+        <div className="modal-content">
+          <span className="close" onClick={closeModal}>&times;</span>
+          <h2>{editingUser ? 'Edit User' : 'Add New User'}</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <span>Full Name:</span>
+              <input
+                name="full_name"
+                value={formData.full_name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <span>Username:</span>
+              <input
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <span>Password:</span>
+              <input
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required={!editingUser}
+              />
+            </div>
+            <div>
+              <span>Role:</span>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="coordinator">Coordinator</option>
+              </select>
+            </div>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </Modal>
       <table {...getTableProps()}>
         <thead>
@@ -198,13 +195,18 @@ function Users() {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
+          {filteredUsers.map(user => {
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
+              <tr key={user.user_id}>
+                <td>{user.full_name}</td>
+                <td>{user.username}</td>
+                <td>{user.role}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="edit-button" onClick={() => handleEdit(user)}>Edit</button>
+                    <button className="delete-button" onClick={() => handleDelete(user.user_id)}>Delete</button>
+                  </div>
+                </td>
               </tr>
             );
           })}

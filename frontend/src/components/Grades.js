@@ -1,4 +1,5 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { useTable } from 'react-table';
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -22,6 +23,8 @@ function Grades() {
     totalValue: '',
     trimester: ''
   });
+  const { user } = useContext(AuthContext);
+  const teacherId = user?.userId;
 
   const fetchGrades = useCallback(async (studentId = '', classId = '', trimester = '') => {
     try {
@@ -44,8 +47,10 @@ function Grades() {
 
     const fetchClasses = async () => {
       try {
-        const response = await axios.get('/api/classes/4');
-        setClasses(response.data.classes);
+        if (teacherId) {
+          const response = await axios.get(`/api/classes/${teacherId}`);
+          setClasses(response.data.classes);
+        }
       } catch (error) {
         console.error('Error fetching classes:', error);
       }
@@ -53,20 +58,16 @@ function Grades() {
 
     const fetchInitialData = async () => {
       try {
-        const classesResponse = await axios.get('/api/classes');
-        setClasses(classesResponse.data.classes);
-        const studentsResponse = await axios.get('/api/students');
-        setStudents(studentsResponse.data.students);
-        fetchGrades(); // Fetch all grades initially
+        fetchClasses();
+        fetchGrades();
       } catch (error) {
         console.error('Error fetching initial data:', error);
       }
     };
-
-    fetchStudents();
-    fetchClasses();
+  
     fetchInitialData();
-  }, [fetchGrades]);
+    fetchStudents();
+  }, [teacherId, fetchGrades]);
 
    // Modify handleStudentChange to filter grades based on both student and class
    const handleStudentChange = (e) => {
@@ -149,10 +150,6 @@ function Grades() {
         accessor: 'date',
       },
       {
-        Header: 'Level',
-        accessor: 'level',
-      },
-      {
         Header: 'Actions',
         accessor: 'actions',
         Cell: ({ row }) => (
@@ -222,10 +219,6 @@ function Grades() {
         ariaHideApp={false}
         className="modal"
       >
-        <div className="modal-header">
-          <h2>Add New Grade</h2>
-          <button className='modal-close-button' onClick={() => setModalIsOpen(false)}>✖</button>
-        </div>
         <div className="modal-body">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -296,6 +289,13 @@ function Grades() {
           </div>
             </div>
             <button className='modal-submit-button' type="submit">Submit</button>
+            <button
+  className='modal-cancel-button'
+  type="button" // Ensure the button doesn't submit the form
+  onClick={() => setModalIsOpen(false)}
+>
+  cancel
+</button>
           </form>
         </div>
       </Modal>

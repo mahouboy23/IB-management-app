@@ -1,17 +1,17 @@
-import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const isAuthenticated = localStorage.getItem('token'); // Check if token exists
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { user } = useContext(AuthContext);
 
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
-  );
+  if (!user || !allowedRoles.includes(user.role)) {
+    // User not authenticated or not authorized, redirect to login
+    return <Navigate to="/login" replace />;
+  }
+
+  // User authenticated and authorized, render the children components
+  return children;
 };
 
 export default ProtectedRoute;

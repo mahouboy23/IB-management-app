@@ -40,7 +40,7 @@ function Users() {
     e.preventDefault();
     try {
       if (editingUser) {
-        await axios.put(`/api/users/${editingUser.user_id}`, formData);
+        await axios.put(`/api/users/update/${editingUser.user_id}`, formData);
       } else {
         await axios.post('/api/users', formData);
       }

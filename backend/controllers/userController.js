@@ -37,9 +37,10 @@ exports.updateUser = async (req, res) => {
     const { userId } = req.params;
     const { username, password, role, full_name } = req.body;
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
         const [result] = await db.execute(`
             UPDATE Users SET username = ?, password = ?, role = ?, full_name = ? WHERE user_id = ?
-        `, [username, password, role, full_name, userId]); // Remember to hash the password in a real application
+        `, [username, hashedPassword, role, full_name, userId]); // Remember to hash the password in a real application
         res.status(200).json({ message: "User updated successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });

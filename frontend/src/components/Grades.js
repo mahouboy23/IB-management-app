@@ -36,14 +36,6 @@ function Grades() {
   }, []);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get('/api/students');
-        setStudents(response.data.students);
-      } catch (error) {
-        console.error('Error fetching students:', error);
-      }
-    };
 
     const fetchClasses = async () => {
       try {
@@ -66,7 +58,6 @@ function Grades() {
     };
   
     fetchInitialData();
-    fetchStudents();
   }, [teacherId, fetchGrades]);
 
    // Modify handleStudentChange to filter grades based on both student and class
@@ -80,21 +71,28 @@ function Grades() {
   const handleClassChange = async (e) => {
     const classId = e.target.value;
     setNewGrade({ ...newGrade, classId });
-    if (classId) {
+    if (classId && classId !== "0") { // Check if a valid classId is selected and not the "None" option
       const studentsResponse = await axios.get(`/api/students/class/${classId}`);
       setStudents(studentsResponse.data.students);
     } else {
-      const allStudentsResponse = await axios.get('/api/students');
-      setStudents(allStudentsResponse.data.students);
+      setStudents([]);
     }
+    // Ensure grades are filtered correctly for the selected class and student
     fetchGrades(newGrade.studentId, classId, newGrade.trimester);
-  };  
+  }; 
 
   // Modify handleTrimesterChange to filter grades based on trimester
   const handleTrimesterChange = (e) => {
     const trimester = e.target.value;
     setNewGrade({ ...newGrade, trimester });
-    fetchGrades(newGrade.studentId, newGrade.classId, trimester);
+  
+    // Check if both studentId and classId are selected (i.e., not "0" or an empty string)
+    if (newGrade.studentId && newGrade.studentId !== "0" && newGrade.classId && newGrade.classId !== "0") {
+      fetchGrades(newGrade.studentId, newGrade.classId, trimester);
+    } else {
+      // Optionally, clear the grades data or handle the case where class or student is "None"
+      setGradesData([]);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -111,9 +109,10 @@ function Grades() {
       } else {
         console.log(response.data.message);
         setModalIsOpen(false);
-        fetchGrades(newGrade.studentId); // Refresh grades for the selected student after adding a new grade
-      } }
-    catch (error) {
+        // Refresh grades for the current class and trimester after adding a new grade
+        fetchGrades(newGrade.studentId, newGrade.classId, newGrade.trimester);
+      }
+    } catch (error) {
       // Set the error message to be displayed in the UI
       setMessage(error.response.data.message || 'Failed to add grade.');
       setIsErrorModalOpen(true);
@@ -123,11 +122,11 @@ function Grades() {
   const handleDelete = useCallback(async (gradeId) => {
     try {
       await axios.delete(`/api/grades/${gradeId}`);
-      fetchGrades(newGrade.studentId); // Refresh grades for the selected student after deleting a grade
+      fetchGrades(newGrade.studentId, newGrade.classId, newGrade.trimester); // Refresh grades for the selected student after deleting a grade
     } catch (error) {
       console.error('Failed to delete grade:', error);
     }
-  }, [newGrade.studentId, fetchGrades]);
+  }, [newGrade.studentId, newGrade.classId, newGrade.trimester, fetchGrades]);
 
   const data = useMemo(() => gradesData, [gradesData]);
 
@@ -187,17 +186,18 @@ function Grades() {
         </label>
       </div>
       <div className="class-group">
-        <label>
-          <select
-            value={newGrade.classId}
-            onChange={handleClassChange}
-            className="class-input"
-          >
-            {classes.map(classItem => (
-              <option key={classItem.class_id} value={classItem.class_id}>{classItem.class_name}</option>
-            ))}
-          </select>
-        </label>
+      <label>
+        <select
+          value={newGrade.classId}
+          onChange={handleClassChange}
+          className="class-input"
+        >
+          <option value="0">None</option> {/* Add "None" option */}
+          {classes.map(classItem => (
+            <option key={classItem.class_id} value={classItem.class_id}>{classItem.class_name}</option>
+          ))}
+        </select>
+      </label>
         <div className="trimester-dropdown">
        <label>
         <select
@@ -221,34 +221,35 @@ function Grades() {
       >
         <div className="modal-body">
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>
-                Student:
-                <select
-                  value={newGrade.studentId}
-                  onChange={(e) => setNewGrade({ ...newGrade, studentId: e.target.value })}
-                  className="modal-input"
-                >
-                  {students.map(student => (
-                    <option key={student.user_id} value={student.user_id}>{student.full_name}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <div className="form-group">
-              <label>
-                Class:
-                <select
-                  value={newGrade.classId}
-                  onChange={(e) => setNewGrade({ ...newGrade, classId: e.target.value })}
-                  className="modal-input"
-                >
-                  {classes.map(classItem => (
-                    <option key={classItem.class_id} value={classItem.class_id}>{classItem.class_name}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
+          <div className="form-group">
+        <label>
+          Class:
+          <select
+            value={newGrade.classId}
+            onChange={handleClassChange} // Use the updated handleClassChange
+            className="modal-input"
+          >
+            <option value="0">None</option>
+            {classes.map(classItem => (
+              <option key={classItem.class_id} value={classItem.class_id}>{classItem.class_name}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <div className="form-group">
+        <label>
+          Student:
+          <select
+            value={newGrade.studentId}
+            onChange={(e) => setNewGrade({ ...newGrade, studentId: e.target.value })}
+            className="modal-input"
+          >
+            {students.map(student => (
+              <option key={student.user_id} value={student.user_id}>{student.full_name}</option>
+            ))}
+          </select>
+        </label>
+      </div>
             <div className="form-group">
               <label>
                 Trimester:
@@ -291,7 +292,7 @@ function Grades() {
             <button className='modal-submit-button' type="submit">Submit</button>
             <button
   className='modal-cancel-button'
-  type="button" // Ensure the button doesn't submit the form
+  type="button"
   onClick={() => setModalIsOpen(false)}
 >
   cancel
@@ -304,7 +305,7 @@ function Grades() {
   isOpen={isErrorModalOpen}
   onRequestClose={() => setIsErrorModalOpen(false)}
   contentLabel="Error Message"
-  className="modal"
+  className="modalerror"
 >
   <div className="modal-error-header">
     <h2>Error</h2>

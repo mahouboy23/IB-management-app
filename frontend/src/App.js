@@ -10,7 +10,6 @@ import Grades from './components/Grades';
 import Boundaries from './components/Boundaries';
 import SClasses from './components/Classes-s';
 import SGrades from './components/Grades-s';
-import COverview from './components/Overview-c';
 import CClasses from './components/Classes-c';
 import Users from './components/Users';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -43,7 +42,6 @@ const App = () => {
       {/* Other routes */}
       <Route path="/coordinator" element={<CoordinatorDashboard />}>
         <Route path="users" element={<Users />} />
-        <Route path="overview" element={<COverview />} />
         <Route path="classes-c" element={<CClasses />} />
       </Route>
     </Routes>

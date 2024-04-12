@@ -137,12 +137,15 @@ exports.updateClass = async (req, res) => {
 exports.deleteClass = async (req, res) => {
     const { classId } = req.params;
     try {
-        await db.execute(`DELETE FROM Classes WHERE class_id = ?`, [classId]);
-        res.status(200).json({ message: "Class deleted successfully" });
+      // First, delete dependent records
+      await db.execute(`DELETE FROM studentclasses WHERE class_id = ?`, [classId]);
+      // Then, delete the class
+      await db.execute(`DELETE FROM Classes WHERE class_id = ?`, [classId]);
+      res.status(200).json({ message: "Class deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-};
+  };
 
 exports.getStudentsNotInClass = async (req, res) => {
     const { classId } = req.params;

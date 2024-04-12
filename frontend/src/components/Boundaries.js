@@ -170,7 +170,7 @@ function Boundaries() {
           <tr>
             <th>Class</th>
             <th>Over Value</th>
-            <th>Grades</th>
+            <th>Boundarie</th>
             <th>Actions</th>
           </tr>
         </thead>

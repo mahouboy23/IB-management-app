@@ -16,7 +16,7 @@ function Users() {
     password: '',
     role: 'student',
     full_name: ''
-  });
+});
 
   useEffect(() => {
     fetchUsers();
@@ -39,10 +39,14 @@ function Users() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const updatedFormData = { ...formData };
       if (editingUser) {
-        await axios.put(`/api/users/update/${editingUser.user_id}`, formData);
+        if (formData.password === '') {
+          delete updatedFormData.password;
+        }
+        await axios.put(`/api/users/update/${editingUser.user_id}`, updatedFormData);
       } else {
-        await axios.post('/api/users', formData);
+        await axios.post('/api/users', updatedFormData);
       }
       fetchUsers();
       closeModal();
@@ -78,7 +82,8 @@ function Users() {
       username: '',
       password: '',
       role: 'student',
-      full_name: ''
+      full_name: '',
+      isEditing: false
     });
   };
 

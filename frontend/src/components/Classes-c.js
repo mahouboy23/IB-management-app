@@ -121,6 +121,7 @@ function ClassManagement() {
   };
 
   const handleDelete = async (classId) => {
+    console.log('Deleting class with ID:', classId);
     try {
       await axios.delete(`/api/classes/${classId}`);
       fetchClasses();
